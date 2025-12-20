@@ -14,7 +14,7 @@ import bannerRouter from './routes/bannerRoute.js'
 // App Config
 const app = express()
 const port = process.env.PORT
-connectDB()
+await connectDB()
 connectCloudinary()
 
 // MiddleWare
