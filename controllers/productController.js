@@ -2,9 +2,9 @@ import { v2 as cloudinary } from "cloudinary"
 import productModel from "../models/productModel.js"
 
 // Function for add product
-const addProduct = async (req,res) => {
+const addProduct = async (req, res) => {
     try {
-        
+
         const { name, description, price, quantity, category, bestseller } = req.body
 
         const image1 = req.files.image1 && req.files.image1[0]
@@ -16,14 +16,20 @@ const addProduct = async (req,res) => {
         const image7 = req.files.image7 && req.files.image7[0]
         const image8 = req.files.image8 && req.files.image8[0]
 
-        const images = [image1,image2,image3,image4,image5,image6,image7,image8].filter((item)=> item !== undefined)
+        const images = [image1, image2, image3, image4, image5, image6, image7, image8].filter((item) => item !== undefined)
 
-        let imagesUrl = await Promise.all(
-            images.map(async (item) => {
-              let result = await cloudinary.uploader.upload(item.path,{resource_type:'image'});
-              return result.secure_url 
-            })
-        )
+        let imagesUrl = [];
+        if (process.env.CLOUDINARY_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_SECRET_KEY && images.length > 0) {
+            imagesUrl = await Promise.all(
+                images.map(async (item) => {
+                    let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+                    return result.secure_url
+                })
+            )
+        } else if (images.length > 0) {
+            console.warn("Cloudinary credentials are missing. Using mock image URL.");
+            imagesUrl = images.map(() => "https://via.placeholder.com/300x400?text=Mock+Image");
+        }
 
         const productData = {
             name,
@@ -41,49 +47,49 @@ const addProduct = async (req,res) => {
         const product = new productModel(productData);
         await product.save()
 
-        res.json({success:true,message:"Product Added"})
+        res.json({ success: true, message: "Product Added" })
     } catch (error) {
         console.log(error);
-        res.json({success:false,message:error.message}) 
+        res.json({ success: false, message: error.message })
     }
 }
 
 // Function for list product
-const listProducts = async (req,res) => {
+const listProducts = async (req, res) => {
     try {
         const products = await productModel.find({});
-        res.json({success:true,products})
-
-    }  catch (error) {
-        console.log(error);
-        res.json({success:false,message:error.message}) 
- } 
-}
-
-// Function for removing product
-const removeProduct = async (req,res) => {
-    try {
-        
-        await productModel.findByIdAndDelete(req.body.id)
-        res.json({success:true,message:"Product Removed"})
+        res.json({ success: true, products })
 
     } catch (error) {
         console.log(error);
-        res.json({success:false,message:error.message}) 
+        res.json({ success: false, message: error.message })
+    }
+}
+
+// Function for removing product
+const removeProduct = async (req, res) => {
+    try {
+
+        await productModel.findByIdAndDelete(req.body.id)
+        res.json({ success: true, message: "Product Removed" })
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message })
     }
 }
 
 // Function for single product
-const singleProduct = async (req,res) => {
+const singleProduct = async (req, res) => {
     try {
-        
+
         const { productId } = req.body
         const product = await productModel.findById(productId)
-        res.json({success:true,product})
+        res.json({ success: true, product })
 
     } catch (error) {
         console.log(error);
-        res.json({success:false,message:error.message}) 
+        res.json({ success: false, message: error.message })
     }
 }
 

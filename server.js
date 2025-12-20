@@ -22,16 +22,18 @@ app.use(express.json())
 app.use(cors())
 
 // API Endpoints
-app.use('/api/user',userRouter)
-app.use('/api/product',productRouter)
-app.use('/api/cart',cartRouter)
-app.use('/api/order',orderRouter)
-app.use('/api/email',emailRouter)
-app.use('/api/blog',blogRouter)
-app.use('/api/banner',bannerRouter)
+app.use('/api/user', userRouter)
+app.use('/api/product', productRouter)
+app.use('/api/cart', cartRouter)
+app.use('/api/order', orderRouter)
+app.use('/api/email', emailRouter)
+app.use('/api/blog', blogRouter)
+app.use('/api/banner', bannerRouter)
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
     res.send("Ancient Avenue Backend is Live")
 })
 
-app.listen(port, ()=> console.log('Server started on PORT : '+ port))
+app.listen(port, () => console.log('Server started on PORT : ' + port))
+
+export default app;
