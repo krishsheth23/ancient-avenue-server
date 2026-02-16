@@ -5,7 +5,7 @@ import productModel from "../models/productModel.js"
 const addProduct = async (req, res) => {
     try {
 
-        const { name, description, price, quantity, category, bestseller } = req.body
+        const { name, description, price, quantity, category, bestseller, shipping } = req.body
 
         const image1 = req.files.image1 && req.files.image1[0]
         const image2 = req.files.image2 && req.files.image2[0]
@@ -39,6 +39,7 @@ const addProduct = async (req, res) => {
             quantity: Number(quantity),
             bestseller: bestseller === "true" ? true : false,
             image: imagesUrl,
+            shipping,
             date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
         }
 
