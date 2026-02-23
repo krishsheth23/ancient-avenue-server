@@ -94,4 +94,55 @@ const singleProduct = async (req, res) => {
     }
 }
 
-export { addProduct, listProducts, removeProduct, singleProduct }
+// function for update product
+const updateProduct = async (req, res) => {
+    try {
+        const { id, name, description, price, quantity, category, bestseller, shipping } = req.body
+
+        const image1 = req.files.image1 && req.files.image1[0]
+        const image2 = req.files.image2 && req.files.image2[0]
+        const image3 = req.files.image3 && req.files.image3[0]
+        const image4 = req.files.image4 && req.files.image4[0]
+        const image5 = req.files.image5 && req.files.image5[0]
+        const image6 = req.files.image6 && req.files.image6[0]
+        const image7 = req.files.image7 && req.files.image7[0]
+        const image8 = req.files.image8 && req.files.image8[0]
+
+        const images = [image1, image2, image3, image4, image5, image6, image7, image8].filter((item) => item !== undefined)
+
+        let updateData = {
+            name,
+            description,
+            category,
+            price: Number(price),
+            quantity: Number(quantity),
+            bestseller: bestseller === "true" ? true : false,
+            shipping
+        }
+
+        if (images.length > 0) {
+            let imagesUrl = [];
+            if (process.env.CLOUDINARY_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_SECRET_KEY) {
+                imagesUrl = await Promise.all(
+                    images.map(async (item) => {
+                        let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+                        return result.secure_url
+                    })
+                )
+            } else {
+                imagesUrl = images.map(() => "https://via.placeholder.com/300x400?text=Mock+Image");
+            }
+            updateData.image = imagesUrl;
+        }
+
+        await productModel.findByIdAndUpdate(id, updateData)
+
+        res.json({ success: true, message: "Product Updated" })
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message })
+    }
+}
+
+export { addProduct, listProducts, removeProduct, singleProduct, updateProduct }
