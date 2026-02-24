@@ -91,7 +91,6 @@ const placeOrderStripe = async (req, res) => {
             amount,
             paymentMethod: "Stripe",
             payment: false,
-            status: 'Pending',
             date: Date.now()
         };
 
@@ -142,7 +141,7 @@ const verifyStripe = async (req, res) => {
 
     try {
         if (success === "true") {
-            await orderModel.findByIdAndUpdate(orderId, { payment: true, status: 'Order Placed' });
+            await orderModel.findByIdAndUpdate(orderId, { payment: true });
             await userModel.findByIdAndUpdate(userId, { cartData: {} })
 
             // Reduce product quantities for successful Stripe payment
@@ -182,7 +181,6 @@ const placeOrderRazorpay = async (req, res) => {
             amount,
             paymentMethod: "Razorpay",
             payment: false,
-            status: 'Pending',
             date: Date.now()
         }
 
@@ -216,7 +214,7 @@ const verifyRazorpay = async (req, res) => {
 
         const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
         if (orderInfo.status === 'paid') {
-            await orderModel.findByIdAndUpdate(orderInfo.receipt, { payment: true, status: 'Order Placed' });
+            await orderModel.findByIdAndUpdate(orderInfo.receipt, { payment: true });
             await userModel.findByIdAndUpdate(userId, { cartData: {} })
 
             // Reduce product quantities for successful Razorpay payment

@@ -13,10 +13,6 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    shipping: {
-        type: String,
-        required: true
-    },
     quantity: {
         type: Number,
         required: true
@@ -46,6 +42,6 @@ const productSchema = new mongoose.Schema({
     }
 })
 
-const productModel = mongoose.models.product || mongoose.model("product", productSchema);
+const productModel = mongoose.models.product || mongoose.model("product",productSchema);
 
 export default productModel
