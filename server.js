@@ -30,6 +30,7 @@ app.use('/api/email', emailRouter)
 app.use('/api/blog', blogRouter)
 app.use('/api/banner', bannerRouter)
 
+// Recievers Endpoints
 app.get('/', (req, res) => {
     res.send("Ancient Avenue Backend is Live")
 })
