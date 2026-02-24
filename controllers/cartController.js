@@ -3,7 +3,8 @@ import userModel from "../models/userModel.js"
 // add products to user cart
 const addToCart = async (req, res) => {
     try {
-        const { userId, itemId, size } = req.body;
+        const { userId, itemId, size, quantity } = req.body;
+        const qty = Number(quantity) || 1;
 
         const userData = await userModel.findById(userId);
         if (!userData) {
@@ -14,13 +15,13 @@ const addToCart = async (req, res) => {
 
         if (cartData[itemId]) {
             if (cartData[itemId][size]) {
-                cartData[itemId][size] += 1;
+                cartData[itemId][size] += qty;
             } else {
-                cartData[itemId][size] = 1;
+                cartData[itemId][size] = qty;
             }
         } else {
             cartData[itemId] = {};
-            cartData[itemId][size] = 1;
+            cartData[itemId][size] = qty;
         }
 
         await userModel.findByIdAndUpdate(userId, { cartData });
@@ -68,7 +69,7 @@ const getUserCart = async (req, res) => {
             return res.json({ success: false, message: "User not found" });
         }
 
-        let cartData = userData.cartData || {}; 
+        let cartData = userData.cartData || {};
 
         res.json({ success: true, cartData });
     } catch (error) {

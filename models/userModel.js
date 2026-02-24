@@ -11,21 +11,21 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    phone: { 
-        type: String, 
-        default: "000000000" 
+    phone: {
+      type: String,
+      default: "000000000"
     },
-    address: { 
-        type: Object,
-        default: { line1: "", line2: "" } 
+    address: {
+      type: Object,
+      default: { street: "", city: "", state: "", zipcode: "", country: "" }
     },
-    gender: { 
-        type: String, 
-        default: "Not Selected" 
+    gender: {
+      type: String,
+      default: "Not Selected"
     },
-    dob: { 
-        type: String, 
-        default: "Not Selected" 
+    dob: {
+      type: String,
+      default: "Not Selected"
     },
     password: {
       type: String,
